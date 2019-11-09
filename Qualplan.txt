@@ -1,0 +1,41 @@
+https://dev61896.service-now.com/sys_cluster_state_list.do?sysparm_query=  -- to view the number of nodes in our instance
+
+I have written after BR to insert a stakeholder into project
+var gr=new GlideRecord('u_stakeholders');
+	gr.initialize();
+	gr.u_stake_holder_sponsor=current.u_stake_holder_sponsor;
+	gr.u_delivery_sponsor=current.u_delivery_sponsor;
+	gr.u_program=current.u_program;
+	gr.u_portfolio=current.u_portfolio;
+	gr.u_primary_point_of_contact=current.u_primary_point_of_contact;
+	gr.u_parent=current.sys_id;
+	gr.insert();
+	gs.addInfoMessage('stakeholder has been created through project Record');
+--- but why we cant see the info in realted list  === we should update parent field which is refrence field on the stakeholder form
+
+PM Asset checked means display decomm status
+Create client script to add option when it changes === check the 'true'
+-- check why it is not working
+
+how to calculate date difference of dates in two forms
+
+Workflow has been created to send email notifications == notifications for projects
+
+Function to change string to date format:
+------------------------------------------
+function formatDateString(dt, format) {
+	var d = dt.getDate();
+	var M = dt.getMonth() + 1;
+	var yyyy = dt.getFullYear();
+	var dd = ('0' + d).slice(-2);
+	var MM = ('0' + M).slice(-2);
+	var yy = ('0' + yyyy).slice(-2);
+	
+	var returnValue = format.replace('dd', dd);
+	returnValue = returnValue.replace('d', d);
+	returnValue = returnValue.replace('MM', MM);
+	returnValue = returnValue.replace('M', M);
+	returnValue = returnValue.replace('yyyy', yyyy);
+	returnValue = returnValue.replace('yy', yy);
+			
+	return returnValue;
