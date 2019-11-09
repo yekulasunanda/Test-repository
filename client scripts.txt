@@ -1,0 +1,48 @@
+function onLoad() {
+   //Type appropriate comment here, and begin script below
+   if(g_form.isNewRecord())
+	   g_form.setReadOnly('short_description',flase);
+	else
+		{
+			g_form.setReadOnly('short_description',true);
+		}
+}
+
+
+
+var gr=new GlideRecord('incident');
+gr.addEncodedQuery('priority=1^state=7^caller_id.active=true^caller_id=5137153cc611227c000bbd1bd8cd2005');
+gr.query();
+while(gr.next())
+{
+gs.addInfoMessage('The Incident Number' +gr.number+gr.state.getDisplayValue());
+}
+
+var agg=new GlideAggregate('incident');
+	agg.addAggregate('COUNT');
+	agg.query();
+	var countR=0;
+	if(agg.next())
+		{
+			countR=agg.addAggregate('COUNT');
+		}
+	gs.addInfoMessage('The number of records in incident ' + countR);
+	
+	
+	
+	
+	var setAssignmentGroup = Class.create();
+setAssignmentGroup.prototype = Object.extendsObject(AbstractAjaxProcessor, {
+populateAssignmentGroup : function(){
+	var gr=new GlideRecord('cmbd_ci');
+	gr.addQuery(sys_id,this.getParameter('sysparam_cmdb_ci'));
+	gr.query();
+	if(gr.next())
+		{
+			return gr.support_group;
+		}
+	
+},
+    type: 'setAssignmentGroup'
+});
+

@@ -1,0 +1,361 @@
+var incGr = new GlideRecord('incident');
+
+if (incGr.get('number', 'INC0000059')) {
+  gs.info(incGr.getValue('sys_id'));
+}
+
+
+var incGr = new GlideRecord('incident');
+
+if (incGr.get('965c9e5347c12200e0ef563dbb9a7156')) {
+  gs.info(incGr.getValue('number'));
+}
+
+
+var list = [1, 3, 5];
+
+list.forEach(myFunction);
+
+function myFunction(item) {
+  gs.info('myFunction item=' + item);
+}
+
+var list = [1, 3, 5];
+
+list.forEach(function (item) {
+  gs.info('embedded function item=' + item);
+});
+
+var list = ['apple', 'banana', 'orange'];
+
+list.forEach(function (item, index, arr) {
+  gs.info('embedded function item=' + item + ' index=' + index + ' arr=' + arr);
+});
+
+
+
+function listRecords(tableName)
+{
+var answer=[];
+var gr=new GlideRecord(tableName);
+gr.query();
+
+while(gr.next())
+{
+
+answer.push(gr.getDisplayValue());
+
+}
+return answer;
+}
+gs.info(listRecords('incident').join('\n'));
+
+
+function listRecords(tableName,limit)
+{
+var answer=[];
+var gr=new GlideRecord(tableName);
+if(limit && limit>0){
+gr.setLimit(limit);
+}
+gr.query();
+
+while(gr.next())
+{
+
+answer.push(gr.getDisplayValue());
+
+}
+return answer;
+}
+gs.info(listRecords('incident',5).join('\n'));
+
+
+object notation:
+var box = {};
+box.height   = 20;
+box.width    = 10;
+box.length   = 10;
+box.material = "cardboard";
+box.open     = true;
+gs.info(box.material);
+
+var vehicle = {};
+vehicle['year'] = 2018;
+vehicle['make'] = "Toyota";
+vehicle['model'] = "Sienna";
+gs.info(vehicle['year'] + ' ' + vehicle['make'] +  ' ' + vehicle['model']);
+
+var vehicle = {
+  "year" : 2018,
+  "make"  : "Toyota",
+  "model" : "Sienna"
+};
+gs.info(vehicle['year'] + ' ' + vehicle['make'] +  ' ' + vehicle['model']); 
+
+
+To check if object has property:
+
+var vehicle = {
+  "year" : 2018,
+  "make"  : "Toyota",
+  "model" : "Sienna"
+};
+gs.info(vehicle.hasOwnProperty("year"));  // <== true
+gs.info(vehicle.hasOwnProperty("price")); // <== false
+
+Finding all properties in an object:
+
+var vehicle = {
+  "year" : 2018,
+  "make"  : "Toyota",
+  "model" : "Sienna"
+};
+for (var key in vehicle) {
+  gs.info('key=' + key + ' value=' + vehicle[key]);
+}
+
+Array of objects:
+
+var bookList = [
+  {
+    "title" : "Harry Potter and the Chamber of Secrets",
+    "author" : "J.K. Rowling"
+  },
+  {
+    "title" : "Moby Dick",
+    "author" : "Herman Melville"
+  },
+  {
+    "title" : "A Tale of Two Cities",
+    "author" : "Charles Dickens"
+  }
+];
+var len = bookList.length;
+gs.info('Last author=' + bookList[len].author);
+
+for (var i = 0; i < len; i++) {
+  var book = bookList[i];
+  gs.info(i + ' - Title: ' + book.title + ' - Author: ' + book.author);
+}
+
+Json.stringify usage:
+var bookList = [
+  {
+    "title" : "Harry Potter and the Chamber of Secrets",
+    "author" : "J.K. Rowling"
+  },
+  {
+    "title" : "Moby Dick",
+    "author" : "Herman Melville"
+  },
+  {
+    "title" : "A Tale of Two Cities",
+    "author" : "Charles Dickens"
+  }
+];
+gs.info(bookList); // That's not very helpful!
+
+var bookListStr = JSON.stringify(bookList);
+gs.info(bookListStr);  // I can read it - sort of
+
+var bookListStrFormat = JSON.stringify(bookList, null, 4);
+gs.info(bookListStrFormat); // Ah - that's better!
+
+
+JSON.parse usage:
+var libraryStr = '[{"title":"Harry Potter and the Chamber of Secrets","author":"J.K. Rowling"},{"title":"Moby Dick","author":"Herman Melville"},{"title":"A Tale of Two Cities","author":"Charles Dickens"}]';
+gs.info('length=' + libraryStr.length);
+var libraryObj = JSON.parse(libraryStr);
+gs.info('length=' + libraryObj.length);
+gs.info(JSON.stringify(libraryObj, null, 4));
+
+Array of Objects:
+function listRecords(tableName,limit)
+{
+var answer=[] ;
+var gr=new GlideRecord(tableName);
+if(limit && limit>0){
+gr.setLimit(limit);
+}
+gr.query();
+
+while(gr.next())
+{
+var obj={};
+obj.display_value=gr.getDisplayValue();
+obj.sys_id=gr.getUniqueValue();
+answer.push(obj);
+
+}
+return answer;
+}
+var list=listRecords('incident',5);
+//gs.info(list);
+gs.info(JSON.stringify(list,null,4));
+
+Indexof:
+var subject = 'Warning: Email is not working';
+var pos = subject.indexOf('Email');
+gs.info(pos);
+
+Use the position of a character/substring as a condition:
+//
+var short_description = 'System is displaying error message';
+if (short_description.indexOf('error') >= 0) {
+  gs.info("Error message found");
+}
+
+var str = 'Approved: RITM0010001 - Laptop renewal';
+var pos = str.indexOf('RITM');
+var ritmNumber = str.substring(pos, pos + 11);
+gs.info(ritmNumber);
+
+Case matters in string:
+var firstName = 'Chuck';
+var loginName = 'chuck';
+if (loginName == firstName) {
+  gs.info('names match');
+} else {
+  gs.info('names do not match');
+}
+
+
+Using toUpper or toLower for better matching:
+var firstName = 'Chuck';
+var loginName = 'chuck';
+gs.info('firstName=' + firstName.toUpperCase() + ' loginName=' + loginName.toUpperCase());
+if (loginName.toUpperCase() == firstName.toUpperCase()) {
+  gs.info('names match');
+} else {
+  gs.info('names do not match');
+}
+
+Recursion:
+function factorial(x) {
+
+  // TERMINATION
+  if (x < 0)
+    return;
+
+  // BASE
+  if (x === 0)
+    return 1;
+
+  // RECURSION
+  return x * factorial(x - 1);
+}
+gs.info(factorial(3));
+
+Classes, Objects, and Prototypes:
+var person = Class.create();
+person.prototype = {
+    initialize: function() {
+      this.firstName = '';
+      this.lastName  = '';
+    },
+
+    setFirstName : function(str) {
+      this.firstName = str;
+    },
+
+    setLastName : function(str) {
+      this.lastName = str;
+    },
+
+    getDisplayName : function() {
+      return this.firstName + ' ' + this.lastName;
+    },
+
+    type: person
+};
+
+var me = new person();
+me.setFirstName('Chuck');
+me.setLastName('Tomasi')
+gs.info('me=' + me.firstName + ' ' + me.lastName); // Not advised
+var name = me.getDisplayName();
+gs .info(name);
+
+Passing objects to functions:
+
+var item = Class.create();
+item.prototype = {
+    initialize: function() {
+    },
+
+    debugObject : function(obj) {
+
+      gs.info('object=' + JSON.stringify(obj, null, 4));
+    },
+
+    type: 'item'
+};
+
+var myObj = {
+  "type"   : "vehicle",
+  "engine" : true,
+  "wheels" : 4,
+  "state"  : "allocated"
+};
+var myItem = new item();
+myItem.debugObject(myObj); // Loosely coupled
+
+Class Inheritance:
+
+var vehicle = Class.create();
+vehicle.prototype = {
+    initialize: function(year, make, model) {
+      this.make = make;
+      this.model = model;
+      this.year = year;
+    },
+
+    register : function() {
+      gs.info(this.getDisplayName() + ' registered!');
+    },
+
+    info : function() {
+      gs.info('Vehicle info: TBD');
+    },
+
+    getDisplayName : function() {
+
+      return this.year + ' ' + this.make + ' ' + this.model;
+
+    },
+
+    type: 'vehicle'
+};
+
+var car = Class.create();
+car.prototype = Object.extendsObject(vehicle, {
+
+    findDealer : function() {
+      gs.info('Find dealer is not yet implemented');
+    },
+
+    info : function() {
+      gs.info('Car info: TBD');
+    },
+
+    type: 'car'
+});
+
+var v1 = new vehicle('2018', 'John Deere', 'Tractor');
+v1.register();
+v1.info();
+
+var v2 = new car('2017', 'Honda', 'CR-V');
+v2.register();
+v2.findDealer();
+v2.info();
+
+
+Simple scripted REST API (GET) resource:
+
+(function process(/*RESTAPIRequest*/ request, /*RESTAPIResponse*/ response) {
+
+  return "hello, world!";
+    
+})(request, response);
