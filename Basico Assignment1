@@ -1,0 +1,66 @@
+When user selects pending from State field dropdown, then one new field dropdown Sub Status should be displayed below state field, 
+which contains value such as: Awaiting moderation, Customer Action, Need Info and Hardware Requested.
+
+solution: UI policy has been created and made substate visible when state is pending
+
+Caller reference field should be auto populated with the logged in user name.
+
+solution:
+function onLoad() {
+   //Type appropriate comment here, and begin script below
+ var user = g_user.userName ;
+	alert('user name is' +  user);
+	g_form.setValue('caller_id',user);
+}
+
+There should be button (name as- Assigned Me) at the top, this button should only display to users those who belongs to 
+selected assignment group mentioned below Assignment group field in incident record. 
+Means when selects the assignment group from assignment group field and he belong to 
+that group then that button should be visible to him.
+
+Solution: 
+        UI Action  condition: gs.getUser().isMemberOf(current.assignment_group)
+		check condition by impersonating user
+
+This is related to above requirement, when user click on “Assigned Me” button then his name will get populated in below Assigned to reference field
+	Script:
+	current.assigned_to = gs.getUserID();
+    current.update();
+	
+Add one field to form, field name is email. This field should display the email of selected requester. 
+If you change the requester than email value will also get change. This field should be read only.
+	
+Solution: ScriptInclude and Client server
+	
+	var getuserEmail = Class.create();
+getuserEmail.prototype = Object.extendsObject(AbstractAjaxProcessor, {
+getEmail : function(){
+	var usr= new GlideRecord('sys_user');
+ usr.get(this.getParameter('sysparm_user_name'));
+   return usr.email.toString();
+},
+    type: 'getuserEmail'
+});
+
+function onChange(control, oldValue, newValue, isLoading, isTemplate) {
+    if (isLoading || newValue === '') {
+        return;
+    }
+    var ga = new GlideAjax('getuserEmail');
+    ga.addParam('sysparm_name', 'getEmail');
+    ga.addParam('sysparm_user_name', g_form.getValue('caller_id'));
+    ga.getXML(getResponse);
+
+    function getResponse(response) {
+        var email = response.responseXML.documentElement.getAttribute("answer");
+        g_form.setValue('u_email', email);
+
+	}
+}
+
+Email notification should be triggered to Assignment Group, Assignee and Requester 
+when incident ticket assignee fills the assignment group and save or submit the incident record.
+Email body can be: Hi Assignee Name,
+Incident ticket number has been assigned to you for resolution.
+
+Notifications has been created by giving conditions in notification "when to send" tab
